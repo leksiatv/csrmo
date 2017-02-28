@@ -51,21 +51,39 @@ public class Main {
 
             for (int row = 0; row < user_names.length; row++) {
                 db.update("INSERT INTO name(name_id,name) VALUES('" + row + "','" + user_names[row] + "');");
+
             }
             for (int row = 0; row < user_second_names.length; row++) {
                 db.update("INSERT INTO second_name(second_id,second_name) VALUES('" + row + "','" + user_second_names[row] + "');");
             }
 
+            for (int row = 0; row < age.length; row++) {
+                for (int row_names = 0; row_names < user_names.length; row_names++) {
+                    for (int row_sec_names = 0; row_sec_names < user_second_names.length; row_sec_names++) {
+                        db.update("INSERT INTO human(name_id,second_id,age) VALUES('" + row_names + "','" + row_sec_names + "','" + age[row] + "');");
+                    }
+                }
+
+            }
 
         } catch (SQLException ex2) {
             ex2.printStackTrace();
         }
 
         try {
-            db.query("SELECT * FROM name");
-            db.query("SELECT * FROM second_name");
-            db.query("SELECT * FROM human");
+            //   db.query("SELECT * FROM name");
+            //   db.query("SELECT * FROM second_name");
+            //   db.query("SELECT * FROM human");
+
+            System.out.println("RESULT: name <-> second_name <-> age");
+
+            db.query("SELECT nam.name,sec_nam.SECOND_NAME,hum.AGE FROM human as hum\n" +
+                    "LEFT JOIN NAME as nam on hum.NAME_ID = nam.NAME_ID\n" +
+                    "LEFT JOIN SECOND_NAME as sec_nam on hum.SECOND_ID = sec_nam.SECOND_ID\n" +
+                    "ORDER BY hum.HUMAN_ID\n");
+
             db.shutdown();
+            System.out.println("All done!");
 
         } catch (SQLException ex3) {
             ex3.printStackTrace();
